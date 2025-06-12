@@ -1,8 +1,8 @@
 export const roar = "Roar.s..";
 
 // eslint-disable-next-line no-unused-vars
-function sum(a, b) {return a + b;
-} 
+
+export function sum(a, b) {return a + b;} 
 
 
 

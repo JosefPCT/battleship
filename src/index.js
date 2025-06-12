@@ -1,5 +1,6 @@
 import "./styles.css";
-import { roar } from './test.js'
+import { roar, sum } from './starter.js'
 
 
 console.log(roar);
+console.log(sum);
