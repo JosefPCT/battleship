@@ -52,4 +52,14 @@ describe('Game board class', () => {
       expect(gameboard.getCell([7,5])).toHaveProperty('length', 5);
       expect(gameboard.getCell([8,5])).not.toBeInstanceOf(Ship);
     });
+
+    test('receiveAttack function, can determine if hit a ship or not', () => {
+      let gameboard = new Gameboard();
+      let ship = new Ship(3);
+      gameboard.placeShip([0,0], ship);
+      gameboard.receiveAttack([0,0]);
+      gameboard.receiveAttack([1,0]);
+      gameboard.receiveAttack([2,0]);
+      expect(ship.hasSunk).toBe(true);
+    })
 });

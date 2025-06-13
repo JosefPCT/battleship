@@ -10,7 +10,7 @@ class Gameboard{
       for(let i = 0; i < height; i++){
         temp.push([]);
         for(let j = 0; j < width; j++){
-          temp[i].push([null]);
+          temp[i].push(null);
         }
       }
       console.log(temp);
@@ -33,5 +33,18 @@ class Gameboard{
     getCell(coordinates){
         let [y, x] = coordinates;
         return this.board[y][x];
+    }
+
+    receiveAttack(coordinates){
+      let [y, x] = coordinates;
+      let ship = this.board[y][x];
+      if(ship){
+        ship.hit();
+        return 'Hit a ship';
+      } else {
+        return 'Missed!';
+      }
+    //   return this.board[y][x];
+    //   return 'Hit a ship'
     }
 }
