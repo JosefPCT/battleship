@@ -62,4 +62,26 @@ describe('Game board class', () => {
       gameboard.receiveAttack([2,0]);
       expect(ship.hasSunk).toBe(true);
     })
+
+    test('gameboard can store logs on the .logs property', () => {
+        let gameboard = new Gameboard();
+        let ship = new Ship(2);
+        gameboard.placeShip([1,1], ship);
+        gameboard.receiveAttack([0,0]);
+        expect(gameboard.logs).toHaveLength(1);
+    });
+
+    test('gameboard can store multiple logs on the .logs property ', () => {
+        let gameboard = new Gameboard();
+        let ship = new Ship(2);
+        gameboard.placeShip([1,1], ship);
+        gameboard.receiveAttack([0,0]);
+        gameboard.receiveAttack([1,1]);
+        gameboard.receiveAttack([2,1]);
+        expect(gameboard.logs).toHaveLength(3);
+    });
+
+    test('gameboard report function to check if all ships have been sunked', () => {
+      let gameboard = new Gameboard();
+    });
 });

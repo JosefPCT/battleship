@@ -3,6 +3,7 @@ export { Gameboard }
 class Gameboard{
     constructor(){
         this.board = this.createBoard();
+        this.logs = [];
     }
 
     createBoard(width=10,height=10){
@@ -40,11 +41,11 @@ class Gameboard{
       let ship = this.board[y][x];
       if(ship){
         ship.hit();
+        this.logs.push(`Hit a ship! At coordinates; y:${y}, x:${x}`);
         return 'Hit a ship';
       } else {
+        this.logs.push(`Missed! Coordinates: y:${y}, x:${x}`);
         return 'Missed!';
       }
-    //   return this.board[y][x];
-    //   return 'Hit a ship'
     }
 }
