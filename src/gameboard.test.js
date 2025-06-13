@@ -44,6 +44,12 @@ describe('Game board class', () => {
       let gameboard = new Gameboard();
       let ship = new Ship(5);
       gameboard.placeShip([3,5], ship);
-      expect(gameboard.board[3,5]).toBeInstanceOf(Ship);
+      expect(gameboard.getCell([3,5])).toBeInstanceOf(Ship);
+      expect(gameboard.getCell([4,5])).toBeInstanceOf(Ship);
+      expect(gameboard.getCell([5,5])).toBeInstanceOf(Ship);
+      expect(gameboard.getCell([6,5])).toBeInstanceOf(Ship);
+      expect(gameboard.getCell([7,5])).toBeInstanceOf(Ship);
+      expect(gameboard.getCell([7,5])).toHaveProperty('length', 5);
+      expect(gameboard.getCell([8,5])).not.toBeInstanceOf(Ship);
     });
 });

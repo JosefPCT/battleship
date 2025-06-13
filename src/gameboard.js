@@ -28,7 +28,10 @@ class Gameboard{
         this.board[y][x] = ship;
         y++;
       }
-    
     }
 
+    getCell(coordinates){
+        let [y, x] = coordinates;
+        return this.board[y][x];
+    }
 }
