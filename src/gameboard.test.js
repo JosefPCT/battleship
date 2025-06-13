@@ -81,7 +81,30 @@ describe('Game board class', () => {
         expect(gameboard.logs).toHaveLength(3);
     });
 
-    test('gameboard report function to check if all ships have been sunked', () => {
+    test('gameboard allShipsSunk function to check if all ships have been sunked', () => {
       let gameboard = new Gameboard();
+      let ship = new Ship(1);
+      gameboard.placeShip([2,2], ship);
+      gameboard.receiveAttack([2,2]);
+      expect(gameboard.allShipsSunk()).toBe(true);
+    });
+
+    test('gameboard allShipsSunk function to return false if all ships have not been sunked', () => {
+      let gameboard = new Gameboard();
+      let ship = new Ship(1);
+      gameboard.placeShip([0,0], ship);
+      expect(gameboard.allShipsSunk()).toBe(false);
+    });
+
+    test('gameboards allShipsSunk function test multiple ships', () => {
+        let gameboard = new Gameboard();
+        let ship = new Ship(2);
+        let ship2 = new Ship(1);
+        gameboard.placeShip([0,0], ship);
+        gameboard.placeShip([1,2], ship2);
+        gameboard.receiveAttack([0,0]);
+        gameboard.receiveAttack([0,0]);
+        gameboard.receiveAttack([1,2]);
+        expect(gameboard.allShipsSunk()).toBe(true);
     });
 });

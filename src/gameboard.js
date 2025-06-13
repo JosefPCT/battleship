@@ -4,6 +4,7 @@ class Gameboard{
     constructor(){
         this.board = this.createBoard();
         this.logs = [];
+        this.listOfShips = [];
     }
 
     createBoard(width=10,height=10){
@@ -29,6 +30,9 @@ class Gameboard{
         this.board[y][x] = ship;
         y++;
       }
+
+      // Put this ship reference into the listOfShips array for easy traversing
+      this.listOfShips.push({coordinates, ship});
     }
 
     getCell(coordinates){
@@ -47,5 +51,18 @@ class Gameboard{
         this.logs.push(`Missed! Coordinates: y:${y}, x:${x}`);
         return 'Missed!';
       }
+    }
+
+    allShipsSunk(){
+        let len = this.listOfShips.length;
+        let flag = true;
+        for(let i = 0; i < len; i++){
+            console.log(this.listOfShips[i].ship.hasSunk);
+            if(this.listOfShips[i].ship.hasSunk === false){
+              flag = false;
+              break;
+            }
+        }
+        return flag;
     }
 }
