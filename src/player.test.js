@@ -41,4 +41,21 @@ describe('Player class', () => {
         player.playerBoard.placeShip([1,0], ship);
         expect(player.playerBoard.getCell([3,0])).toBeInstanceOf(Ship);
     });
+
+    test('Can have multiple players with their own board', () => {
+        let player = new Player();
+        let computer = new Player('computer');
+        let ship = new Ship(3);
+        let ship2 = new Ship(5);
+        let computerShip = new Ship(2);
+        let computerShip2 = new Ship(5);
+        let computerShip3 = new Ship(1);
+        player.playerBoard.placeShip([0,0], ship);
+        player.playerBoard.placeShip([3,3], ship2);
+        computer.playerBoard.placeShip([0,0], computerShip);
+        computer.playerBoard.placeShip([0,1], computerShip2);
+        computer.playerBoard.placeShip([0,3], computerShip3);
+        expect(player.playerBoard.listOfShips).toHaveLength(2);
+        expect(computer.playerBoard.listOfShips).toHaveLength(3);
+    });
 });
