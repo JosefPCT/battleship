@@ -15,8 +15,8 @@ class Gameboard{
           temp[i].push(null);
         }
       }
-      console.log(temp);
-      return temp
+    //   console.log(temp);
+      return temp;
     }
 
     placeShip(coordinates, ship){
@@ -57,7 +57,7 @@ class Gameboard{
         let len = this.listOfShips.length;
         let flag = true;
         for(let i = 0; i < len; i++){
-            console.log(this.listOfShips[i].ship.hasSunk);
+            // console.log(this.listOfShips[i].ship.hasSunk);
             if(this.listOfShips[i].ship.hasSunk === false){
               flag = false;
               break;
