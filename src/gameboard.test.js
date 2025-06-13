@@ -1,4 +1,4 @@
-import { experiments } from 'webpack';
+// import { experiments } from 'webpack';
 import { Gameboard } from './gameboard.js';
 import { Ship } from './ship.js';
 
@@ -31,12 +31,19 @@ describe('Game board class', () => {
       expect(gameboard.board[1][6]).toHaveProperty('length',5);
     });
 
-    test('Instantied ships must fill the correct grid in regards to its length', () => {
+    test('Instantied ships must fill the correct grid in regards to its length, ship length: 3', () => {
       let gameboard = new Gameboard();
-      gameboard.board[0][0] = new Ship(3);
-      expect(gameboard.board[0][0]).toBeInstanceOf(Ship);
-      expect(gameboard.board[1][0]).toBeInstanceOf(Ship);
-      expect(gameboard.board[2][0]).toBeInstanceOf(Ship);
-      expect(gameboard.board[3][0]).not.toBeInstanceOf(Ship);
+      gameboard.placeShip([0,3], new Ship(3));
+      expect(gameboard.board[0][3]).toBeInstanceOf(Ship);
+      expect(gameboard.board[1][3]).toBeInstanceOf(Ship);
+      expect(gameboard.board[2][3]).toBeInstanceOf(Ship);
+      expect(gameboard.board[3][3]).not.toBeInstanceOf(Ship)
+    });
+
+    test('placeShip function with a ship length of 5', () => {
+      let gameboard = new Gameboard();
+      let ship = new Ship(5);
+      gameboard.placeShip([3,5], ship);
+      expect(gameboard.board[3,5]).toBeInstanceOf(Ship);
     });
 });

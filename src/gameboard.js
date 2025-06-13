@@ -17,4 +17,18 @@ class Gameboard{
       return temp
     }
 
+    placeShip(coordinates, ship){
+      // Check if valid coordinates
+
+      // Check if coordinates are out of bounds
+
+      let [y, x] = coordinates;
+      // Place ship along grid with regards to its length
+      for(let i = 0; i < ship.length; i++){
+        this.board[y][x] = ship;
+        y++;
+      }
+    
+    }
+
 }
