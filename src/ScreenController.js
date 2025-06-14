@@ -7,7 +7,7 @@ class ScreenController{
     constructor(){
       this.gc = new GameController();
       this.defaultSetup();
-      this.buildMyBoard();
+      this.buildActivePlayerBoard();
       this.buildOpposingBoard();
     }
 
@@ -62,6 +62,12 @@ class ScreenController{
             columnDiv.setAttribute(`data-x`, `${j}`);
 
             columnDiv.addEventListener('click', this.attack);
+            columnDiv.addEventListener('mouseenter', (e) => {
+              e.target.classList.add('highlight');
+            })
+            columnDiv.addEventListener('mouseleave', (e) => {
+              e.target.classList.remove('highlight');
+            });
 
             rowDiv.appendChild(columnDiv);
           }
@@ -69,8 +75,11 @@ class ScreenController{
         }
     }
 
+    // Event handler helper for buildOpposingBoard method
     attack(e){
         console.log('Clicked!');
         console.log(e.target);
+        console.log(e.target.dataset.y);
+        console.log(e.target.dataset.x);
     }
 }
