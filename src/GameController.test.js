@@ -32,4 +32,26 @@ describe('Game Controller Module', () => {
     expect(gc.activePlayer.name).toBe(player1.name);
     expect(gc.opposingPlayer.name).toBe(player2.name);
   });
+
+  test('switchTurn method thats exchanges activePlayer and opposingPlayer from each other', () => {
+    let player1 = new Player('Aaron');
+    let player2 = new Player('Computer');
+    let gc = new GameController(player1,player2);
+
+    gc.switchTurn();
+    expect(gc.activePlayer.name).toBe(player2.name);
+    expect(gc.opposingPlayer.name).toBe(player1.name);
+  });
+
+  test('switchTurn method thats exchanges activePlayer and opposingPlayer from each other multiple turns', () => {
+    let player1 = new Player('Aaron');
+    let player2 = new Player('Computer');
+    let gc = new GameController(player1,player2);
+
+    gc.switchTurn();
+    gc.switchTurn();
+    gc.switchTurn();
+    expect(gc.activePlayer.name).toBe(player2.name);
+    expect(gc.opposingPlayer.name).toBe(player1.name);
+  });
 });

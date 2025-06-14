@@ -9,4 +9,14 @@ class GameController{
     this.activePlayer = this.player1;
     this.opposingPlayer = this.player2;
   }
+
+  switchTurn(){
+    // let currentActive = this.activePlayer;
+    // let currentOpposing = this.opposingPlayer;
+    
+    // this.activePlayer = currentOpposing;
+    // this.opposingPlayer = currentActive;
+    this.activePlayer = this.activePlayer === this.player1 ? this.player2 : this.player1;
+    this.opposingPlayer = this.opposingPlayer === this.player1 ? this.player2 : this.player1;
+  }
 }
