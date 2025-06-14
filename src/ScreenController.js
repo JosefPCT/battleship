@@ -21,7 +21,7 @@ class ScreenController{
       opposingPlayerBoard.placeShip([1,1], new Ship(1));
     }
 
-    buildMyBoard(){
+    buildActivePlayerBoard(){
       let board = this.gc.activePlayer.playerBoard.board;
       let row = board.length;
       let column = board[0].length;
