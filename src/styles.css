@@ -2,6 +2,26 @@ h1{
     color: Blue;
 }
 
+#playArea{
+    
+}
+
+.row{
+    display: flex;
+}
+
+.column{
+  height: 15px;
+  width: 15px;
+  border: 1px solid grey;
+}
+
+.hasShip{
+  border-color: green;
+  background-color: green;
+}
+
+
 body{
-    background-color: brown;
+    /* background-color: brown; */
 }
