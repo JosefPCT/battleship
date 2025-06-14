@@ -8,6 +8,7 @@ class ScreenController{
       this.gc = new GameController();
       this.defaultSetup();
       this.buildMyBoard();
+      this.buildOpposingBoard();
     }
 
     defaultSetup(){
@@ -15,13 +16,17 @@ class ScreenController{
       activePlayerBoard.placeShip([0,0], new Ship(3));
       activePlayerBoard.placeShip([5,5], new Ship(1));
       activePlayerBoard.placeShip([3,3], new Ship(5));
+
+      let opposingPlayerBoard = this.gc.opposingPlayer.playerBoard;
+      opposingPlayerBoard.placeShip([1,1], new Ship(1));
     }
+
     buildMyBoard(){
       let board = this.gc.activePlayer.playerBoard.board;
       let row = board.length;
       let column = board[0].length;
 
-      let playArea = document.getElementById('playArea');
+      let playArea = document.getElementById('activePlayerArea');
 
       for(let i = 0; i < row; i++){
         let rowDiv = document.createElement('div');
@@ -38,5 +43,34 @@ class ScreenController{
         }
         playArea.appendChild(rowDiv);
       }
+    }
+
+    buildOpposingBoard(){
+        let board = this.gc.opposingPlayer.playerBoard.board;
+        let row = board.length;
+        let column = board[0].length;
+
+        let playArea = document.getElementById('opposingPlayerArea');
+
+        for(let i = 0; i < row; i++){
+          let rowDiv = document.createElement('div');
+          rowDiv.classList.add(`row`);
+          for(let j = 0; j < column; j++){
+            let columnDiv = document.createElement('div');
+            columnDiv.classList.add(`column`);
+            columnDiv.setAttribute('data-y', `${i}`);
+            columnDiv.setAttribute(`data-x`, `${j}`);
+
+            columnDiv.addEventListener('click', this.attack);
+
+            rowDiv.appendChild(columnDiv);
+          }
+          playArea.appendChild(rowDiv);
+        }
+    }
+
+    attack(e){
+        console.log('Clicked!');
+        console.log(e.target);
     }
 }
