@@ -40,6 +40,8 @@ class Gameboard{
         return this.board[y][x];
     }
 
+    // Method that checks if a ship was hit, and calls on the hit method of the ship class
+    // Also stores information inside the log property using an object
     receiveAttack(coordinates){
       console.log('Entering receive attack method of Gameboard class');
       let [y, x] = coordinates;

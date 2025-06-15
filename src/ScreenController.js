@@ -74,6 +74,7 @@ class ScreenController{
               console.log('Clicked');
               let tmpArr = [e.target.dataset.y, e.target.dataset.x];
               this.sendAttackEvent(tmpArr);
+              this.switchTurnRender();
             });
             columnDiv.addEventListener('mouseenter', (e) => {
               e.target.classList.add('highlight');
@@ -101,9 +102,21 @@ class ScreenController{
     //     // this.gc.opposingPlayer.playerBoard.receiveAttack(tmpArr);
     // }
 
-    //Helper to circumvent the 'this' problem
+    //Helper method to call on the receiveAttack method of the opposing opponent's gameboard
     sendAttackEvent(coordinates){
       this.gc.opposingPlayer.playerBoard.receiveAttack(coordinates);
       console.log(this.gc.opposingPlayer.playerBoard.logs);
+    }
+
+    //Helper method to display a screen that indicates the switching of turns, clears the board
+    switchTurnRender(){
+      let activePlayerAreaDiv = document.getElementById('activePlayerArea');
+      let opposingPlayerAreaDiv = document.getElementById('opposingPlayerArea');
+      activePlayerAreaDiv.innerHTML = '';
+      opposingPlayerAreaDiv.innerHTML = '';
+      this.gc.switchTurn();
+      console.log(this.gc.activePlayer);
+      this.buildActivePlayerBoard();
+      this.buildOpposingBoard();
     }
 }
