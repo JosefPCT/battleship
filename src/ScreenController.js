@@ -69,7 +69,12 @@ class ScreenController{
             columnDiv.setAttribute('data-y', `${i}`);
             columnDiv.setAttribute(`data-x`, `${j}`);
 
-            columnDiv.addEventListener('click', this.attack);
+            // Moved the event handler to an arrow function instead of a separate method to preserve this context
+            columnDiv.addEventListener('click', (e) => {
+              console.log('Clicked');
+              let tmpArr = [e.target.dataset.y, e.target.dataset.x];
+              this.sendAttackEvent(tmpArr);
+            });
             columnDiv.addEventListener('mouseenter', (e) => {
               e.target.classList.add('highlight');
             })
@@ -84,10 +89,21 @@ class ScreenController{
     }
 
     // Event handler helper for buildOpposingBoard method
-    attack(e){
-        console.log('Clicked!');
-        console.log(e.target);
-        console.log(e.target.dataset.y);
-        console.log(e.target.dataset.x);
+    // Old Event handler, now moved to the arrow function
+    // clickedOpposingGrid(e){
+    //     console.log('Clicked!');
+    //     console.log(e.target);
+    //     console.log(e.target.dataset.y);
+    //     console.log(e.target.dataset.x);
+    //     let tmpArr = [e.target.dataset.y, e.target.dataset.x];
+    //     ScreenController.sendAttackEvent(tmpArr);
+    //     // let opposingPlayerBoard = this.gc.opposingPlayer.playerBoard;
+    //     // this.gc.opposingPlayer.playerBoard.receiveAttack(tmpArr);
+    // }
+
+    //Helper to circumvent the 'this' problem
+    sendAttackEvent(coordinates){
+      this.gc.opposingPlayer.playerBoard.receiveAttack(coordinates);
+      console.log(this.gc.opposingPlayer.playerBoard.logs);
     }
 }

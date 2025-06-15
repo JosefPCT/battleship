@@ -41,6 +41,7 @@ class Gameboard{
     }
 
     receiveAttack(coordinates){
+      console.log('Entering receive attack method of Gameboard class');
       let [y, x] = coordinates;
       let ship = this.board[y][x];
       if(ship){
