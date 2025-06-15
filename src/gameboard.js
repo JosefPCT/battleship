@@ -46,10 +46,11 @@ class Gameboard{
       let ship = this.board[y][x];
       if(ship){
         ship.hit();
-        this.logs.push(`Hit a ship! At coordinates; y:${y}, x:${x}`);
+        this.logs.push( { successfulHit: true ,coordinates, message: `Hit a ship! At coordinates; y:${y}, x:${x}`} );
         return 'Hit a ship';
       } else {
-        this.logs.push(`Missed! Coordinates: y:${y}, x:${x}`);
+        this.logs.push( { successfulHit: false ,coordinates, message: `Missed! at coordinates; y:${y}, x:${x}`} )
+        // this.logs.push(`Missed! Coordinates: y:${y}, x:${x}`);
         return 'Missed!';
       }
     }
