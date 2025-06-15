@@ -77,7 +77,7 @@ class ScreenController{
               console.log('Clicked');
               let tmpArr = [e.target.dataset.y, e.target.dataset.x];
               if(this.sendAttackEvent(tmpArr)){
-                this.victory();
+                this.victoryEvent();
               } else {
                 this.switchTurnRender();
               };
@@ -156,5 +156,25 @@ class ScreenController{
         this.buildOpposingBoard();
       }, 3000);
       
+    }
+
+    // Method to call on when victory condition is met
+    victoryEvent(){
+      this.clearHelper();
+      let messageEventDiv = document.getElementById('messageEvent');
+      messageEventDiv.textContent = `${this.gc.activePlayer.name} is the Winner!`;
+    }
+
+    // Helper method to clear the html
+    clearHelper(){
+      let activePlayerAreaDiv = document.getElementById('activePlayerArea');
+      let opposingPlayerAreaDiv = document.getElementById('opposingPlayerArea');
+      let messageEventDiv = document.getElementById('messageEvent');
+      let messageLogs = document.getElementById('messageLogs');
+
+      activePlayerAreaDiv.innerHTML = '';
+      opposingPlayerAreaDiv.innerHTML = '';
+      messageEventDiv.innerHTML = '';
+      messageLogs.innerHTML = '';
     }
 }
