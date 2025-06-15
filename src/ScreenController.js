@@ -106,17 +106,24 @@ class ScreenController{
     sendAttackEvent(coordinates){
       this.gc.opposingPlayer.playerBoard.receiveAttack(coordinates);
       console.log(this.gc.opposingPlayer.playerBoard.logs);
+      let messageEventDiv = document.getElementById('messageEvent');
+      messageEventDiv.textContent = this.gc.opposingPlayer.playerBoard.logs[this.gc.opposingPlayer.playerBoard.logs.length - 1].message;
     }
 
     //Helper method to display a screen that indicates the switching of turns, clears the board
     switchTurnRender(){
       let activePlayerAreaDiv = document.getElementById('activePlayerArea');
       let opposingPlayerAreaDiv = document.getElementById('opposingPlayerArea');
-      activePlayerAreaDiv.innerHTML = '';
-      opposingPlayerAreaDiv.innerHTML = '';
-      this.gc.switchTurn();
-      console.log(this.gc.activePlayer);
-      this.buildActivePlayerBoard();
-      this.buildOpposingBoard();
+      // Used setTimeout to add delay before going to the next turn
+      // Might refactor to wait for a click instead before going to the next turn
+      setTimeout(() => {
+        activePlayerAreaDiv.innerHTML = '';
+        opposingPlayerAreaDiv.innerHTML = '';
+        this.gc.switchTurn();
+        console.log(this.gc.activePlayer);
+        this.buildActivePlayerBoard();
+        this.buildOpposingBoard();
+      }, 3000);
+      
     }
 }
