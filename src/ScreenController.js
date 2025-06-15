@@ -23,6 +23,7 @@ class ScreenController{
       opposingPlayerBoard.placeShip([1,1], new Ship(1));
     }
 
+    // Builds the active player board that shows the ships
     buildActivePlayerBoard(){
       let board = this.gc.activePlayer.playerBoard.board;
       let row = board.length;
@@ -51,8 +52,10 @@ class ScreenController{
         }
         playArea.appendChild(rowDiv);
       }
+      this.showLogs();
     }
 
+    // Build the opposing board without showing the ship and adding event listener for it to be clickable by the activeplayer
     buildOpposingBoard(){
         let board = this.gc.opposingPlayer.playerBoard.board;
         let row = board.length;
@@ -73,8 +76,11 @@ class ScreenController{
             columnDiv.addEventListener('click', (e) => {
               console.log('Clicked');
               let tmpArr = [e.target.dataset.y, e.target.dataset.x];
-              this.sendAttackEvent(tmpArr);
-              this.switchTurnRender();
+              if(this.sendAttackEvent(tmpArr)){
+                this.victory();
+              } else {
+                this.switchTurnRender();
+              };
             });
             columnDiv.addEventListener('mouseenter', (e) => {
               e.target.classList.add('highlight');
@@ -87,6 +93,28 @@ class ScreenController{
           }
           playArea.appendChild(rowDiv);
         }
+    }
+
+    // Method to show logs of the active players
+    showLogs(){
+      console.log('Creating logs...');
+      let logContainer = document.getElementById('messageLogs');
+      let logList = this.gc.opposingPlayer.playerBoard.logs;
+      let len = logList.length;
+      let turnNumber = 1;
+      let i = 0;
+
+      logContainer.innerHTML = '';
+
+      while(len > 0){
+        console.log("Entering log loop");
+        let logDiv = document.createElement('p');
+        logDiv.textContent = `Turn ${turnNumber}: ${logList[i].message}`;
+        logContainer.prepend(logDiv);
+        len--;
+        turnNumber++;
+        i++
+      }
     }
 
     // Event handler helper for buildOpposingBoard method
@@ -102,15 +130,18 @@ class ScreenController{
     //     // this.gc.opposingPlayer.playerBoard.receiveAttack(tmpArr);
     // }
 
-    //Helper method to call on the receiveAttack method of the opposing opponent's gameboard
+    //Helper method to call on the receiveAttack method of the opposing opponent's gameboard, also adds a message on the screen regarding the information on the clicked grid
     sendAttackEvent(coordinates){
       this.gc.opposingPlayer.playerBoard.receiveAttack(coordinates);
       console.log(this.gc.opposingPlayer.playerBoard.logs);
       let messageEventDiv = document.getElementById('messageEvent');
       messageEventDiv.textContent = this.gc.opposingPlayer.playerBoard.logs[this.gc.opposingPlayer.playerBoard.logs.length - 1].message;
+
+      // Call on the allShipsHasSunked method of the opposing player board to check for winning condiion, return if true or false
+      return this.gc.opposingPlayer.playerBoard.allShipsSunk();
     }
 
-    //Helper method to display a screen that indicates the switching of turns, clears the board
+    //Helper method to display a screen that indicates the switching of turns, clears the board, and rebuilds the new activePlayer board and opposingplayer board
     switchTurnRender(){
       let activePlayerAreaDiv = document.getElementById('activePlayerArea');
       let opposingPlayerAreaDiv = document.getElementById('opposingPlayerArea');
