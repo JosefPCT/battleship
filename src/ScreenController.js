@@ -16,6 +16,8 @@ class ScreenController{
       activePlayerBoard.placeShip([0,0], new Ship(3));
       activePlayerBoard.placeShip([5,5], new Ship(1));
       activePlayerBoard.placeShip([3,3], new Ship(5));
+      activePlayerBoard.getCell([3,3]).hit().hit().hit().hit().hit();
+      
 
       let opposingPlayerBoard = this.gc.opposingPlayer.playerBoard;
       opposingPlayerBoard.placeShip([1,1], new Ship(1));
@@ -37,7 +39,13 @@ class ScreenController{
           columnDiv.setAttribute('y', `${i}`);
           columnDiv.setAttribute('x', `${j}`);
           if(board[i][j] !== null){
-            columnDiv.classList.add('hasShip');
+            if(board[i][j].hasSunk){
+              columnDiv.classList.add('destroyedShip');
+            } else if(board[i][j].timesHit > 0){
+              columnDiv.classList.add('damagedShip');
+            } else {
+              columnDiv.classList.add('hasShip');
+            }
           }
           rowDiv.appendChild(columnDiv);
         }

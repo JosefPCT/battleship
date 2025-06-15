@@ -22,11 +22,21 @@ h1{
   background-color: green;
 }
 
+.damagedShip{
+  border-color: yellow;
+  background-color: yellow;
+}
+
+.destroyedShip{
+  border-color: red;
+  background-color: red;
+}
+
 .highlight{
   border-color: yellow;
   background-color: yellow;
 }
 
-body{
-    /* background-color: brown; */
-}
+/* body{
+    background-color: brown;
+} */
