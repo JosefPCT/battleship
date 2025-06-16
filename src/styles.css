@@ -17,6 +17,11 @@ h1{
   border: 1px solid grey;
 }
 
+.missedCell{
+  border-color: blue;
+  background-color: blue;
+}
+
 .hasShip{
   border-color: green;
   background-color: green;

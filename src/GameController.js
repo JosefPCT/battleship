@@ -20,8 +20,7 @@ class GameController{
     this.opposingPlayer = this.opposingPlayer === this.player1 ? this.player2 : this.player1;
   }
 
-  removeShipCellOfOpponent(coordinates){
-    this.opposingPlayer.playerBoard.getCell(coordinates) = 'destroyed';
-    
+  removeShipCellOfOpponent(coordinates, newValue){
+    this.opposingPlayer.playerBoard.setCell(coordinates, newValue);
   }
 }

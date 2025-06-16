@@ -1,3 +1,5 @@
+import { Ship } from "./ship.js";
+
 export { Gameboard }
 
 class Gameboard{
@@ -51,7 +53,7 @@ class Gameboard{
       console.log('Entering receive attack method of Gameboard class');
       let [y, x] = coordinates;
       let ship = this.board[y][x];
-      if(ship){
+      if(ship instanceof Ship){
         ship.hit();
         this.logs.push( { successfulHit: true ,coordinates, message: `Hit a ship! At coordinates; y:${y}, x:${x}`} );
         return 'Hit a ship';

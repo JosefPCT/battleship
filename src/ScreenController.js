@@ -25,6 +25,12 @@ class ScreenController{
         if(this.sendAttackEvent(tmpArr)){
           this.victoryEvent();
         } else {
+          if(this.gc.opposingPlayer.playerBoard.logs[this.gc.opposingPlayer.playerBoard.logs.length - 1].successfulHit){
+            this.gc.removeShipCellOfOpponent(tmpArr, 'Destroyed');
+          } else {
+            this.gc.removeShipCellOfOpponent(tmpArr, 'Missed');
+          }
+          
           this.switchTurnRender();
         };
 
@@ -79,7 +85,13 @@ class ScreenController{
           columnDiv.setAttribute('y', `${i}`);
           columnDiv.setAttribute('x', `${j}`);
           if(board[i][j] !== null){
-            if(board[i][j].hasSunk){
+            if(board[i][j] === 'Destroyed'){
+              columnDiv.classList.add('destroyedShip');
+            }
+            else if(board[i][j] === 'Missed'){
+              columnDiv.classList.add('missedCell');
+            }
+            else if(board[i][j].hasSunk){
               columnDiv.classList.add('destroyedShip');
             } else if(board[i][j].timesHit > 0){
               columnDiv.classList.add('damagedShip');
