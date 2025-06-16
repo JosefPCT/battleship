@@ -73,16 +73,35 @@ class ScreenController{
       this.removingListeners();
       let activePlayerAreaDiv = document.getElementById('activePlayerArea');
       let opposingPlayerAreaDiv = document.getElementById('opposingPlayerArea');
+      let messageEventDiv = document.getElementById('messageEvent');
 
       // Used setTimeout to add delay before going to the next turn
       // Might refactor to wait for a click instead before going to the next turn
       setTimeout(() => {
         activePlayerAreaDiv.innerHTML = '';
         opposingPlayerAreaDiv.innerHTML = '';
+        messageEventDiv.innerHTML = '';
+
         this.gc.switchTurn();
-        console.log(this.gc.activePlayer);
-        this.buildActivePlayerBoard();
-        this.buildOpposingBoard();
+        
+        if(this.gc.getActivePlayerName() === 'Computer'){
+          let coordinates = this.gc.generateComputerCoordinates();
+          if(this.sendAttackEvent(coordinates)){
+            this.victoryEvent();
+          } else {
+            if(this.gc.getLatestLogOfActivePlayer().successfulHit){
+              this.gc.removeShipCellOfOpponent(coordinates, null);
+            } else {
+              this.gc.removeShipCellOfOpponent(coordinates, null);
+            }
+            messageEventDiv.textContent = `Computer is attacking. ${this.gc.getLatestLogOfActivePlayer().message}`;
+            this.switchTurnRender();
+          }
+        } else {
+          console.log(this.gc.activePlayer);
+          this.buildActivePlayerBoard();
+          this.buildOpposingBoard();
+        }
       }, 3000);
     }
 

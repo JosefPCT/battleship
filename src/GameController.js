@@ -106,4 +106,17 @@ class GameController{
   removeShipCellOfOpponent(coordinates, newValue){
     this.opposingPlayer.playerBoard.setCell(coordinates, newValue);
   }
+
+  generateComputerCoordinates(){
+    console.log('Generating coordinates...');
+    let y = this.getRandomInteger(0, this.getOpposingPlayerBoard().length - 1);
+    let x = this.getRandomInteger(0, this.getOpposingPlayerBoard().length - 1);
+    return [y,x];
+  }
+
+  getRandomInteger(min, max){
+    let minVal = Math.ceil(min);
+    let maxVal = Math.floor(max);
+    return Math.floor(Math.random() * (maxVal - minVal + 1)) + minVal;
+  }
 }
