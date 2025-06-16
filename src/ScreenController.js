@@ -24,7 +24,8 @@ class ScreenController{
         let tmpArr = [e.target.dataset.y, e.target.dataset.x];
         if(this.sendAttackEvent(tmpArr)){
           this.victoryEvent();
-        } else {
+        } 
+        else {
           if(this.gc.opposingPlayer.playerBoard.logs[this.gc.opposingPlayer.playerBoard.logs.length - 1].successfulHit){
             this.gc.removeShipCellOfOpponent(tmpArr, 'Destroyed');
           } else {
@@ -56,6 +57,42 @@ class ScreenController{
       }
     }
 
+    //Helper method for the event handler of click events to call on the receiveAttack method of the opposing opponent's gameboard, also adds a message on the screen regarding the information on the clicked grid
+    sendAttackEvent(coordinates){
+      this.gc.opposingPlayer.playerBoard.receiveAttack(coordinates);
+      console.log(this.gc.opposingPlayer.playerBoard.logs);
+      let messageEventDiv = document.getElementById('messageEvent');
+      messageEventDiv.textContent = this.gc.opposingPlayer.playerBoard.logs[this.gc.opposingPlayer.playerBoard.logs.length - 1].message;
+
+      // Call on the allShipsHasSunked method of the opposing player board to check for winning condiion, return if true or false
+      return this.gc.opposingPlayer.playerBoard.allShipsSunk();
+    }
+
+    //Helper method for the event handler if a hit does not result to victory, to display a screen that indicates the switching of turns, clears the board, and rebuilds the new activePlayer board and opposingplayer board
+    switchTurnRender(){
+      this.removingListeners();
+      let activePlayerAreaDiv = document.getElementById('activePlayerArea');
+      let opposingPlayerAreaDiv = document.getElementById('opposingPlayerArea');
+      // Used setTimeout to add delay before going to the next turn
+      // Might refactor to wait for a click instead before going to the next turn
+      setTimeout(() => {
+        activePlayerAreaDiv.innerHTML = '';
+        opposingPlayerAreaDiv.innerHTML = '';
+        this.gc.switchTurn();
+        console.log(this.gc.activePlayer);
+        this.buildActivePlayerBoard();
+        this.buildOpposingBoard();
+      }, 3000);
+    }
+
+    // Helper method for the vent handler if a hit results into a victory, Display to the screen who the victor is
+    victoryEvent(){
+      this.clearHelper();
+      let messageEventDiv = document.getElementById('messageEvent');
+      messageEventDiv.textContent = `${this.gc.activePlayer.name} is the Winner!`;
+    }
+
+    // Method to help setup the board without having the player manually placeShips
     defaultSetup(){
       let activePlayerBoard = this.gc.activePlayer.playerBoard;
       activePlayerBoard.placeShip([0,0], new Ship(3));
@@ -93,9 +130,11 @@ class ScreenController{
             }
             else if(board[i][j].hasSunk){
               columnDiv.classList.add('destroyedShip');
-            } else if(board[i][j].timesHit > 0){
+            } 
+            else if(board[i][j].timesHit > 0){
               columnDiv.classList.add('damagedShip');
-            } else {
+            } 
+            else {
               columnDiv.classList.add('hasShip');
             }
           }
@@ -142,7 +181,6 @@ class ScreenController{
     }
 
 
-
     // Method to show logs of the active players
     showLogs(){
       console.log('Creating logs...');
@@ -165,6 +203,19 @@ class ScreenController{
       }
     }
 
+    // Helper method to clear the html
+    clearHelper(){
+      let activePlayerAreaDiv = document.getElementById('activePlayerArea');
+      let opposingPlayerAreaDiv = document.getElementById('opposingPlayerArea');
+      let messageEventDiv = document.getElementById('messageEvent');
+      let messageLogs = document.getElementById('messageLogs');
+
+      activePlayerAreaDiv.innerHTML = '';
+      opposingPlayerAreaDiv.innerHTML = '';
+      messageEventDiv.innerHTML = '';
+      messageLogs.innerHTML = '';
+    }
+
     // Event handler helper for buildOpposingBoard method
     // Old Event handler, now moved to the arrow function
     // clickedOpposingGrid(e){
@@ -178,52 +229,8 @@ class ScreenController{
     //     // this.gc.opposingPlayer.playerBoard.receiveAttack(tmpArr);
     // }
 
-    //Helper method to call on the receiveAttack method of the opposing opponent's gameboard, also adds a message on the screen regarding the information on the clicked grid
-    sendAttackEvent(coordinates){
-      this.gc.opposingPlayer.playerBoard.receiveAttack(coordinates);
-      console.log(this.gc.opposingPlayer.playerBoard.logs);
-      let messageEventDiv = document.getElementById('messageEvent');
-      messageEventDiv.textContent = this.gc.opposingPlayer.playerBoard.logs[this.gc.opposingPlayer.playerBoard.logs.length - 1].message;
 
-      // Call on the allShipsHasSunked method of the opposing player board to check for winning condiion, return if true or false
-      return this.gc.opposingPlayer.playerBoard.allShipsSunk();
-    }
 
-    //Helper method to display a screen that indicates the switching of turns, clears the board, and rebuilds the new activePlayer board and opposingplayer board
-    switchTurnRender(){
-      this.removingListeners();
-      let activePlayerAreaDiv = document.getElementById('activePlayerArea');
-      let opposingPlayerAreaDiv = document.getElementById('opposingPlayerArea');
-      // Used setTimeout to add delay before going to the next turn
-      // Might refactor to wait for a click instead before going to the next turn
-      setTimeout(() => {
-        activePlayerAreaDiv.innerHTML = '';
-        opposingPlayerAreaDiv.innerHTML = '';
-        this.gc.switchTurn();
-        console.log(this.gc.activePlayer);
-        this.buildActivePlayerBoard();
-        this.buildOpposingBoard();
-      }, 3000);
-      
-    }
 
-    // Method to call on when victory condition is met
-    victoryEvent(){
-      this.clearHelper();
-      let messageEventDiv = document.getElementById('messageEvent');
-      messageEventDiv.textContent = `${this.gc.activePlayer.name} is the Winner!`;
-    }
 
-    // Helper method to clear the html
-    clearHelper(){
-      let activePlayerAreaDiv = document.getElementById('activePlayerArea');
-      let opposingPlayerAreaDiv = document.getElementById('opposingPlayerArea');
-      let messageEventDiv = document.getElementById('messageEvent');
-      let messageLogs = document.getElementById('messageLogs');
-
-      activePlayerAreaDiv.innerHTML = '';
-      opposingPlayerAreaDiv.innerHTML = '';
-      messageEventDiv.innerHTML = '';
-      messageLogs.innerHTML = '';
-    }
 }
