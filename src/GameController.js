@@ -20,6 +20,26 @@ class GameController{
     this.opposingPlayer = this.opposingPlayer === this.player1 ? this.player2 : this.player1;
   }
 
+  // Method to get the current active player
+  getActivePlayer(){
+    return this.activePlayer;
+  }
+
+  // Method to get the current opposing player
+  getOpposingPlayer(){
+    return this.opposingPlayer;
+  }
+
+  getActivePlayerName(){
+    return this.activePlayer.name;
+  }
+
+  getOpposingPlayerName(){
+    return this.opposingPlayer.name;
+  }
+
+  
+
   removeShipCellOfOpponent(coordinates, newValue){
     this.opposingPlayer.playerBoard.setCell(coordinates, newValue);
   }
