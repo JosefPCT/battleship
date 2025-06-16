@@ -59,7 +59,7 @@ class ScreenController{
 
     //Helper method for the event handler of click events to call on the receiveAttack method of the opposing opponent's gameboard, also adds a message on the screen regarding the information on the clicked grid
     sendAttackEvent(coordinates){
-      this.gc.opposingPlayer.playerBoard.receiveAttack(coordinates);
+      this.gc.hitOpponent(coordinates);
       console.log(this.gc.opposingPlayer.playerBoard.logs);
       let messageEventDiv = document.getElementById('messageEvent');
       messageEventDiv.textContent = this.gc.opposingPlayer.playerBoard.logs[this.gc.opposingPlayer.playerBoard.logs.length - 1].message;

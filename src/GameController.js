@@ -46,6 +46,10 @@ class GameController{
   currentPlayerIsComputer(){
     return this.getActivePlayerName() === 'Computer' ? true : false;
   }
+
+  hitOpponent(coordinates){
+    this.opposingPlayer.playerBoard.receiveAttack(coordinates);
+  }
   
 
   removeShipCellOfOpponent(coordinates, newValue){
