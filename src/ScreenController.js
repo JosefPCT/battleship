@@ -119,15 +119,22 @@ class ScreenController{
           rowDiv.classList.add(`row`);
           for(let j = 0; j < column; j++){
             let columnDiv = document.createElement('div');
-            columnDiv.classList.add(`column`);
             columnDiv.setAttribute('data-y', `${i}`);
             columnDiv.setAttribute(`data-x`, `${j}`);
+            columnDiv.classList.add(`column`);
 
-            // Moved the event handler to an arrow function instead of a separate method to preserve this context
-            columnDiv.addEventListener('click', this.clickListener);
-            columnDiv.addEventListener('mouseenter', this.mouseenterListener);
-            columnDiv.addEventListener('mouseleave', this.mouseleaveListener);
-
+            if(board[i][j] === 'Destroyed'){
+              columnDiv.classList.add('destroyedShip')
+            } else if(board[i][j] === 'Missed'){
+              columnDiv.classList.add('missedCell');
+            } else {
+              // Moved the event handler to an arrow function instead of a separate method to preserve this context
+              columnDiv.addEventListener('click', this.clickListener);
+              columnDiv.addEventListener('mouseenter', this.mouseenterListener);
+              columnDiv.addEventListener('mouseleave', this.mouseleaveListener);
+            }
+            
+          
             rowDiv.appendChild(columnDiv);
           }
           playArea.appendChild(rowDiv);
