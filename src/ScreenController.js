@@ -59,13 +59,19 @@ class ScreenController{
 
     //Helper method for the event handler of click events to call on the receiveAttack method of the opposing opponent's gameboard, also adds a message on the screen regarding the information on the clicked grid
     sendAttackEvent(coordinates){
-      this.gc.hitOpponent(coordinates);
-      console.log(this.gc.opposingPlayer.playerBoard.logs);
-      let messageEventDiv = document.getElementById('messageEvent');
-      messageEventDiv.textContent = this.gc.opposingPlayer.playerBoard.logs[this.gc.opposingPlayer.playerBoard.logs.length - 1].message;
+      // this.gc.hitOpponent(coordinates);
+      // console.log(this.gc.opposingPlayer.playerBoard.logs);
+      // let messageEventDiv = document.getElementById('messageEvent');
+      // messageEventDiv.textContent = this.gc.opposingPlayer.playerBoard.logs[this.gc.opposingPlayer.playerBoard.logs.length - 1].message;
 
-      // Call on the allShipsHasSunked method of the opposing player board to check for winning condiion, return if true or false
-      return this.gc.opposingPlayer.playerBoard.allShipsSunk();
+      let message = this.gc.hitOpponent(coordinates);
+      let log = this.gc.generateActionLog(message, coordinates);
+      this.gc.addLogToActivePlayer(log);
+
+      let messageEventDiv = document.getElementById('messageEvent');
+      messageEventDiv.textContent = this.gc.getLatestLogOfActivePlayer.message;
+
+      return this.gc.allShipsOfOpposingPlayerHasSunk();
     }
 
     //Helper method for the event handler if a hit does not result to victory, to display a screen that indicates the switching of turns, clears the board, and rebuilds the new activePlayer board and opposingplayer board

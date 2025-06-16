@@ -48,7 +48,29 @@ class GameController{
   }
 
   hitOpponent(coordinates){
-    this.opposingPlayer.playerBoard.receiveAttack(coordinates);
+    return this.opposingPlayer.playerBoard.receiveAttack(coordinates);
+  }
+
+  generateActionLog(value, coordinates){
+    if(value === 'Hit!'){
+      return { successfulHit: true, coordinates, message: `You hit a ship at y:${coordinates[0]}, x:${coordinates[1]}`};
+    }
+    if(value === 'Miss!'){
+      return { successfulHit: false, coordinates, message: `Missed! No ship at y:${coordinates[0]}, x:${coordinates[1]}`};
+    }
+  }
+
+  addLogToActivePlayer(log){
+    this.getActivePlayer().playerBoard.logs.push(log);
+  }
+
+  getLatestLogOfActivePlayer(){
+    let logs = this.getActivePlayer().playerBoard.logs
+    return logs[logs.length - 1];
+  }
+
+  allShipsOfOpposingPlayerHasSunk(){
+    return this.getOpposingPlayer().playerBoard.allShipsSunk();
   }
   
 
