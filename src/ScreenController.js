@@ -22,7 +22,6 @@ class ScreenController{
       this.clickListener = (e) => {
         console.log('Clicked');
         let tmpArr = [parseInt(e.target.dataset.y), parseInt(e.target.dataset.x)];
-        // console.log(tmpArr);
         if(this.sendAttackEvent(tmpArr)){
           this.victoryEvent();
         } 
@@ -35,8 +34,6 @@ class ScreenController{
           
           this.switchTurnRender();
         };
-
-        // e.target.removeEventListener('click', this.clickListener);
         
       }
       
@@ -60,10 +57,6 @@ class ScreenController{
 
     //Helper method for the event handler of click events to call on the receiveAttack method of the opposing opponent's gameboard, also adds a message on the screen regarding the information on the clicked grid
     sendAttackEvent(coordinates){
-      // this.gc.hitOpponent(coordinates);
-      // console.log(this.gc.opposingPlayer.playerBoard.logs);
-      // let messageEventDiv = document.getElementById('messageEvent');
-      // messageEventDiv.textContent = this.gc.opposingPlayer.playerBoard.logs[this.gc.opposingPlayer.playerBoard.logs.length - 1].message;
 
       let message = this.gc.hitOpponent(coordinates);
       let log = this.gc.generateActionLog(message, coordinates);
@@ -80,6 +73,7 @@ class ScreenController{
       this.removingListeners();
       let activePlayerAreaDiv = document.getElementById('activePlayerArea');
       let opposingPlayerAreaDiv = document.getElementById('opposingPlayerArea');
+
       // Used setTimeout to add delay before going to the next turn
       // Might refactor to wait for a click instead before going to the next turn
       setTimeout(() => {
@@ -159,8 +153,6 @@ class ScreenController{
         let row = board.length;
         let column = board[0].length;
         let coordinateLogs = this.gc.generateActivePlayerCoordinateLogs();
-        // console.log('Coordinate Logs');
-        // console.log(coordinateLogs);
 
         let playArea = document.getElementById('opposingPlayerArea');
 
@@ -176,7 +168,6 @@ class ScreenController{
             if(coordinateLogs.includes([parseInt(i),parseInt(j)].join())){
               let logMessage = this.gc.getLogFromId([i,j]).successfulHit;
               
-              // console.log(logMessage);
               if(logMessage){
                 columnDiv.classList.add('destroyedShip');
               } else {
@@ -188,18 +179,6 @@ class ScreenController{
               columnDiv.addEventListener('mouseenter', this.mouseenterListener);
               columnDiv.addEventListener('mouseleave', this.mouseleaveListener);
             };
-
-            // if(board[i][j] === 'Destroyed'){
-            //   columnDiv.classList.add('destroyedShip')
-            // } else if(board[i][j] === 'Missed'){
-            //   columnDiv.classList.add('missedCell');
-            // } else {
-            //   // Moved the event handler to an arrow function instead of a separate method to preserve this context
-            //   columnDiv.addEventListener('click', this.clickListener);
-            //   columnDiv.addEventListener('mouseenter', this.mouseenterListener);
-            //   columnDiv.addEventListener('mouseleave', this.mouseleaveListener);
-            // }
-            
           
             rowDiv.appendChild(columnDiv);
           }
@@ -212,7 +191,6 @@ class ScreenController{
     showLogs(){
       console.log('Creating logs...');
       let logContainer = document.getElementById('messageLogs');
-      // let logList = this.gc.opposingPlayer.playerBoard.logs;
       let logList = this.gc.getActivePlayerLogs();
       let len = logList.length;
       let turnNumber = 1;
@@ -243,20 +221,6 @@ class ScreenController{
       messageEventDiv.innerHTML = '';
       messageLogs.innerHTML = '';
     }
-
-    // Event handler helper for buildOpposingBoard method
-    // Old Event handler, now moved to the arrow function
-    // clickedOpposingGrid(e){
-    //     console.log('Clicked!');
-    //     console.log(e.target);
-    //     console.log(e.target.dataset.y);
-    //     console.log(e.target.dataset.x);
-    //     let tmpArr = [e.target.dataset.y, e.target.dataset.x];
-    //     ScreenController.sendAttackEvent(tmpArr);
-    //     // let opposingPlayerBoard = this.gc.opposingPlayer.playerBoard;
-    //     // this.gc.opposingPlayer.playerBoard.receiveAttack(tmpArr);
-    // }
-
 
 
 
