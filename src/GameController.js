@@ -38,6 +38,14 @@ class GameController{
     return this.opposingPlayer.name;
   }
 
+  // Method to check if the opponent is a Computer, returns true or false
+  opponentIsComputer(){
+    return this.getOpposingPlayerName() === 'Computer' ? true : false;
+  }
+
+  currentPlayerIsComputer(){
+    return this.getActivePlayerName() === 'Computer' ? true : false;
+  }
   
 
   removeShipCellOfOpponent(coordinates, newValue){

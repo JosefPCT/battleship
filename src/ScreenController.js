@@ -38,7 +38,7 @@ class ScreenController{
         // e.target.removeEventListener('click', this.clickListener);
         
       }
-
+      
       this.defaultSetup();
       this.buildActivePlayerBoard();
       this.buildOpposingBoard();
