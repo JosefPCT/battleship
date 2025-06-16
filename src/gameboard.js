@@ -55,10 +55,10 @@ class Gameboard{
       let ship = this.board[y][x];
       if(ship instanceof Ship){
         ship.hit();
-        this.logs.push( { successfulHit: true ,coordinates, message: `Hit a ship! At coordinates; y:${y}, x:${x}`} );
+        // this.logs.push( { successfulHit: true ,coordinates, message: `Hit a ship! At coordinates; y:${y}, x:${x}`} );
         return 'Hit!';
       } else {
-        this.logs.push( { successfulHit: false ,coordinates, message: `Missed! at coordinates; y:${y}, x:${x}`} )
+        // this.logs.push( { successfulHit: false ,coordinates, message: `Missed! at coordinates; y:${y}, x:${x}`} )
         // this.logs.push(`Missed! Coordinates: y:${y}, x:${x}`);
         return 'Miss!';
       }

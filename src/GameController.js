@@ -38,6 +38,14 @@ class GameController{
     return this.opposingPlayer.name;
   }
 
+  getActivePlayerBoard(){
+    return this.getActivePlayer().playerBoard.board;
+  }
+
+  getOpposingPlayerBoard(){
+    return this.getOpposingPlayer().playerBoard.board;
+  }
+
   // Method to check if the opponent is a Computer, returns true or false
   opponentIsComputer(){
     return this.getOpposingPlayerName() === 'Computer' ? true : false;
@@ -53,10 +61,10 @@ class GameController{
 
   generateActionLog(value, coordinates){
     if(value === 'Hit!'){
-      return { successfulHit: true, coordinates, message: `You hit a ship at y:${coordinates[0]}, x:${coordinates[1]}`};
+      return { id: coordinates.join(), successfulHit: true, coordinates, message: `You hit a ship at y:${coordinates[0]}, x:${coordinates[1]}`};
     }
     if(value === 'Miss!'){
-      return { successfulHit: false, coordinates, message: `Missed! No ship at y:${coordinates[0]}, x:${coordinates[1]}`};
+      return { id: coordinates.join(), successfulHit: false, coordinates, message: `Missed! No ship at y:${coordinates[0]}, x:${coordinates[1]}`};
     }
   }
 
@@ -67,6 +75,32 @@ class GameController{
   getLatestLogOfActivePlayer(){
     let logs = this.getActivePlayer().playerBoard.logs
     return logs[logs.length - 1];
+  }
+
+  getActivePlayerLogs(){
+    return this.getActivePlayer().playerBoard.logs;
+  }
+
+  // Method that generate a logs of only coordinates, in a joined string format
+  generateActivePlayerCoordinateLogs(){
+    let logs = this.getActivePlayerLogs();
+    let coordinateLogs = [];
+    logs.forEach((obj) => {
+      console.log(obj.id);
+      coordinateLogs.push(obj.id);
+    });
+    return coordinateLogs;
+  }
+
+  getLogFromId(value){
+    console.log('Entering getLogFromId method');
+    let logs = this.getActivePlayerLogs();
+    for(let i = 0; i < logs.length; i++){
+      if(logs[i].id === value.join()){
+        return logs[i];
+      }
+    }
+    return null;
   }
 
   allShipsOfOpposingPlayerHasSunk(){

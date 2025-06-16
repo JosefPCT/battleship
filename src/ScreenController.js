@@ -21,15 +21,16 @@ class ScreenController{
       // Stored event handler for click event of buildOpposingBoard
       this.clickListener = (e) => {
         console.log('Clicked');
-        let tmpArr = [e.target.dataset.y, e.target.dataset.x];
+        let tmpArr = [parseInt(e.target.dataset.y), parseInt(e.target.dataset.x)];
+        // console.log(tmpArr);
         if(this.sendAttackEvent(tmpArr)){
           this.victoryEvent();
         } 
         else {
-          if(this.gc.opposingPlayer.playerBoard.logs[this.gc.opposingPlayer.playerBoard.logs.length - 1].successfulHit){
-            this.gc.removeShipCellOfOpponent(tmpArr, 'Destroyed');
+          if(this.gc.getLatestLogOfActivePlayer().successfulHit){
+            this.gc.removeShipCellOfOpponent(tmpArr, null);
           } else {
-            this.gc.removeShipCellOfOpponent(tmpArr, 'Missed');
+            this.gc.removeShipCellOfOpponent(tmpArr, null);
           }
           
           this.switchTurnRender();
@@ -69,7 +70,7 @@ class ScreenController{
       this.gc.addLogToActivePlayer(log);
 
       let messageEventDiv = document.getElementById('messageEvent');
-      messageEventDiv.textContent = this.gc.getLatestLogOfActivePlayer.message;
+      messageEventDiv.textContent = this.gc.getLatestLogOfActivePlayer().message;
 
       return this.gc.allShipsOfOpposingPlayerHasSunk();
     }
@@ -153,9 +154,13 @@ class ScreenController{
 
     // Build the opposing board without showing the ship and adding event listener for it to be clickable by the activeplayer
     buildOpposingBoard(){
-        let board = this.gc.opposingPlayer.playerBoard.board;
+        // let board = this.gc.opposingPlayer.playerBoard.board;
+        let board = this.gc.getOpposingPlayerBoard();
         let row = board.length;
         let column = board[0].length;
+        let coordinateLogs = this.gc.generateActivePlayerCoordinateLogs();
+        // console.log('Coordinate Logs');
+        // console.log(coordinateLogs);
 
         let playArea = document.getElementById('opposingPlayerArea');
 
@@ -168,16 +173,32 @@ class ScreenController{
             columnDiv.setAttribute(`data-x`, `${j}`);
             columnDiv.classList.add(`column`);
 
-            if(board[i][j] === 'Destroyed'){
-              columnDiv.classList.add('destroyedShip')
-            } else if(board[i][j] === 'Missed'){
-              columnDiv.classList.add('missedCell');
+            if(coordinateLogs.includes([parseInt(i),parseInt(j)].join())){
+              let logMessage = this.gc.getLogFromId([i,j]).successfulHit;
+              
+              // console.log(logMessage);
+              if(logMessage){
+                columnDiv.classList.add('destroyedShip');
+              } else {
+                columnDiv.classList.add('missedCell');
+              }
             } else {
               // Moved the event handler to an arrow function instead of a separate method to preserve this context
               columnDiv.addEventListener('click', this.clickListener);
               columnDiv.addEventListener('mouseenter', this.mouseenterListener);
               columnDiv.addEventListener('mouseleave', this.mouseleaveListener);
-            }
+            };
+
+            // if(board[i][j] === 'Destroyed'){
+            //   columnDiv.classList.add('destroyedShip')
+            // } else if(board[i][j] === 'Missed'){
+            //   columnDiv.classList.add('missedCell');
+            // } else {
+            //   // Moved the event handler to an arrow function instead of a separate method to preserve this context
+            //   columnDiv.addEventListener('click', this.clickListener);
+            //   columnDiv.addEventListener('mouseenter', this.mouseenterListener);
+            //   columnDiv.addEventListener('mouseleave', this.mouseleaveListener);
+            // }
             
           
             rowDiv.appendChild(columnDiv);
@@ -191,7 +212,8 @@ class ScreenController{
     showLogs(){
       console.log('Creating logs...');
       let logContainer = document.getElementById('messageLogs');
-      let logList = this.gc.opposingPlayer.playerBoard.logs;
+      // let logList = this.gc.opposingPlayer.playerBoard.logs;
+      let logList = this.gc.getActivePlayerLogs();
       let len = logList.length;
       let turnNumber = 1;
       let i = 0;
@@ -199,7 +221,7 @@ class ScreenController{
       logContainer.innerHTML = '';
 
       while(len > 0){
-        console.log("Entering log loop");
+        // console.log("Entering log loop");
         let logDiv = document.createElement('p');
         logDiv.textContent = `Turn ${turnNumber}: ${logList[i].message}`;
         logContainer.prepend(logDiv);
