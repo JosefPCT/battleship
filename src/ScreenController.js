@@ -1,11 +1,12 @@
 import { GameController } from './GameController.js';
 import { Ship } from './ship.js';
+import { Player } from './player.js';
 
 export { ScreenController }
 
 class ScreenController{
-    constructor(){
-      this.gc = new GameController();
+    constructor(player1= new Player(), player2= new Player('Computer')){
+      this.gc = new GameController(player1,player2);
 
       // Storing an arrow function into variables
       // Stored event handler for click event of buildOpposingBoard
@@ -34,15 +35,43 @@ class ScreenController{
           
           this.switchTurnRender();
         };
-        
+      }
+
+      // Stored event handler
+      this.modeEventListener = (e) =>{
+        console.log(e.target.id);
       }
       
-      this.defaultSetup();
-      this.buildActivePlayerBoard();
-      this.buildOpposingBoard();
+      // this.defaultSetup();
+      // this.buildActivePlayerBoard();
+      // this.buildOpposingBoard();
 
+      this.showModeSelector();
 
     }
+
+    showModeSelector(){
+      this.clearHelper();
+      let mainDiv = document.getElementById('main');
+      // mainDiv.innerHTML = `
+      // <button> Vs Another Player</button>
+      // <button> Vs Computer </button>`;
+      let modeComputerButton = document.createElement('button');
+      let modePlayerButton = document.createElement('button')
+
+      modeComputerButton.setAttribute('id','computer-button');
+      modePlayerButton.setAttribute('id','player-button');
+
+      modeComputerButton.textContent = 'Vs Computer';
+      modePlayerButton.textContent = 'Vs Another Player';
+
+      modeComputerButton.addEventListener('click', this.modeEventListener);
+      modePlayerButton.addEventListener('click', this.modeEventListener);
+
+      mainDiv.appendChild(modePlayerButton);
+      mainDiv.appendChild(modeComputerButton);
+    }
+
 
     // Helper method to remove listeners once an opposing grid has been clicked
     removingListeners(){

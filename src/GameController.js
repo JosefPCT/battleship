@@ -3,7 +3,7 @@ import { Player } from "./player.js";
 export {GameController}
 
 class GameController{
-  constructor(player1= new Player(), player2= new Player('Computer')){
+  constructor(player1, player2){
     this.player1 = player1;
     this.player2 = player2;
     this.activePlayer = this.player1;
