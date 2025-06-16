@@ -19,4 +19,9 @@ class GameController{
     this.activePlayer = this.activePlayer === this.player1 ? this.player2 : this.player1;
     this.opposingPlayer = this.opposingPlayer === this.player1 ? this.player2 : this.player1;
   }
+
+  removeShipCellOfOpponent(coordinates){
+    this.opposingPlayer.playerBoard.getCell(coordinates) = 'destroyed';
+    
+  }
 }

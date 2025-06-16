@@ -40,6 +40,11 @@ class Gameboard{
         return this.board[y][x];
     }
 
+    setCell(coordinates, newValue){
+      let [y, x] = coordinates;
+      this.board[y][x] = newValue;
+    }
+
     // Method that checks if a ship was hit, and calls on the hit method of the ship class
     // Also stores information inside the log property using an object
     receiveAttack(coordinates){

@@ -8,14 +8,17 @@ class ScreenController{
       this.gc = new GameController();
 
       // Storing an arrow function into variables
+      // Stored event handler for click event of buildOpposingBoard
       this.mouseenterListener = (e) => {
         e.target.classList.add('highlight');
       }
 
+      // Stored event handler for click event of buildOpposingBoard
       this.mouseleaveListener = (e) => {
         e.target.classList.remove('highlight');
       }
 
+      // Stored event handler for click event of buildOpposingBoard
       this.clickListener = (e) => {
         console.log('Clicked');
         let tmpArr = [e.target.dataset.y, e.target.dataset.x];
@@ -37,7 +40,6 @@ class ScreenController{
     }
 
     // Helper method to remove listeners once an opposing grid has been clicked
-
     removingListeners(){
       let columns = document.getElementsByClassName('column');
       for(let i = 0; i < columns.length; i++){
