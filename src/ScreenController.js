@@ -6,9 +6,46 @@ export { ScreenController }
 class ScreenController{
     constructor(){
       this.gc = new GameController();
+
+      // Storing an arrow function into variables
+      this.mouseenterListener = (e) => {
+        e.target.classList.add('highlight');
+      }
+
+      this.mouseleaveListener = (e) => {
+        e.target.classList.remove('highlight');
+      }
+
+      this.clickListener = (e) => {
+        console.log('Clicked');
+        let tmpArr = [e.target.dataset.y, e.target.dataset.x];
+        if(this.sendAttackEvent(tmpArr)){
+          this.victoryEvent();
+        } else {
+          this.switchTurnRender();
+        };
+
+        // e.target.removeEventListener('click', this.clickListener);
+        
+      }
+
       this.defaultSetup();
       this.buildActivePlayerBoard();
       this.buildOpposingBoard();
+
+
+    }
+
+    // Helper method to remove listeners once an opposing grid has been clicked
+
+    removingListeners(){
+      let columns = document.getElementsByClassName('column');
+      for(let i = 0; i < columns.length; i++){
+        const column = columns[i];
+        column.removeEventListener('click', this.clickListener);
+        column.removeEventListener('mouseenter', this.mouseenterListener);
+        column.removeEventListener('mouseleave', this.mouseleaveListener);
+      }
     }
 
     defaultSetup(){
@@ -73,27 +110,17 @@ class ScreenController{
             columnDiv.setAttribute(`data-x`, `${j}`);
 
             // Moved the event handler to an arrow function instead of a separate method to preserve this context
-            columnDiv.addEventListener('click', (e) => {
-              console.log('Clicked');
-              let tmpArr = [e.target.dataset.y, e.target.dataset.x];
-              if(this.sendAttackEvent(tmpArr)){
-                this.victoryEvent();
-              } else {
-                this.switchTurnRender();
-              };
-            });
-            columnDiv.addEventListener('mouseenter', (e) => {
-              e.target.classList.add('highlight');
-            })
-            columnDiv.addEventListener('mouseleave', (e) => {
-              e.target.classList.remove('highlight');
-            });
+            columnDiv.addEventListener('click', this.clickListener);
+            columnDiv.addEventListener('mouseenter', this.mouseenterListener);
+            columnDiv.addEventListener('mouseleave', this.mouseleaveListener);
 
             rowDiv.appendChild(columnDiv);
           }
           playArea.appendChild(rowDiv);
         }
     }
+
+
 
     // Method to show logs of the active players
     showLogs(){
@@ -143,6 +170,7 @@ class ScreenController{
 
     //Helper method to display a screen that indicates the switching of turns, clears the board, and rebuilds the new activePlayer board and opposingplayer board
     switchTurnRender(){
+      this.removingListeners();
       let activePlayerAreaDiv = document.getElementById('activePlayerArea');
       let opposingPlayerAreaDiv = document.getElementById('opposingPlayerArea');
       // Used setTimeout to add delay before going to the next turn
