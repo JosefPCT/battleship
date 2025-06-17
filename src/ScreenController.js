@@ -89,6 +89,14 @@ class ScreenController{
         this.buildActivePlayerBoard();
         this.buildOpposingBoard();
       }
+
+      this.continueComputerOpposingListener = () => {
+        console.log("Continuing... Opposing a computer");
+        this.clearHelper();
+        this.defaultComputerSetup();
+        this.buildActivePlayerBoard();
+        this.buildOpposingBoard();
+      }
       
       // this.defaultSetup();
       // this.buildActivePlayerBoard();
@@ -109,7 +117,11 @@ class ScreenController{
     }
 
     vsComputerMode(){
-
+      console.log("Versing a computer");
+      this.clearHelper();
+      let name = prompt('Please enter your name');
+      this.gc = new GameController(name, 'Computer');
+      this.renderPlaceShip(this.gc.getActivePlayer());
     }
 
     renderPlaceShip(player){
@@ -160,10 +172,15 @@ class ScreenController{
       });
 
       continueButton.id = 'continue-button';
-      if(player.name === this.gc.getActivePlayerName()){
+      if(this.gc.getOpposingPlayerName() === 'Computer'){
+        continueButton.textContent = 'Continue to play with a computer';
+        continueButton.addEventListener('click', this.continueComputerOpposingListener);
+      }
+      else if(player.name === this.gc.getActivePlayerName()){
         continueButton.textContent = 'Continue to place ship of the other player'
         continueButton.addEventListener('click', this.continueOpposingPlayerListener);
-      } else {
+      } 
+      else {
         continueButton.textContent = 'Continue with game';
         continueButton.addEventListener('click', this.continueGameListener);
       }
@@ -273,6 +290,20 @@ class ScreenController{
 
       let opposingPlayerBoard = this.gc.opposingPlayer.playerBoard;
       opposingPlayerBoard.placeShip([1,1], new Ship(1));
+    }
+
+    // Method to setup computer board
+    defaultComputerSetup(){
+      if(this.gc.getOpposingPlayerName() === 'Computer'){
+        let computerBoard = this.gc.getOpposingPlayer().playerBoard;
+        
+        computerBoard.placeShip([0,0], new Ship(5));
+        computerBoard.placeShip([3,3], new Ship(4));
+        computerBoard.placeShip([5,5], new Ship(2));
+
+      } else {  
+        console.log('Opponent is not a computer');
+      }
     }
 
     // Builds the active player board that shows the ships
