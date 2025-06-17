@@ -22,11 +22,31 @@ class Gameboard{
     }
 
     placeShip(coordinates, ship){
-      // Check if valid coordinates
-
-      // Check if coordinates are out of bounds
-
       let [y, x] = coordinates;
+      let len = this.board.length;
+      // Check if valid coordinates
+      if(y > len - 1 || y < 0){
+        console.log('Invalid coordinates');
+        return false;
+      }
+
+      if( x > len - 1 || x < 0){
+        console.log('Invalid coordinates');
+        return false;
+      }
+      // Check if coordinates are out of bounds
+      if(y + ship.length > len){
+        console.log('Out of bounds');
+        return false;
+      }
+
+      // Check if there's a ship already on the coordinate;
+      if(this.board[y][x] instanceof Ship){
+        console.log('Already has a ship in place');
+        return false;
+      }
+
+      
       // Place ship along grid with regards to its length
       for(let i = 0; i < ship.length; i++){
         this.board[y][x] = ship;
@@ -35,6 +55,7 @@ class Gameboard{
 
       // Put this ship reference into the listOfShips array for easy traversing
       this.listOfShips.push({coordinates, ship});
+      return true;
     }
 
     getCell(coordinates){

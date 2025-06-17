@@ -31,7 +31,7 @@ describe('Game board class', () => {
       expect(gameboard.board[1][6]).toHaveProperty('length',5);
     });
 
-    test('Instantied ships must fill the correct grid in regards to its length, ship length: 3', () => {
+    test('Instantiated ships must fill the correct grid in regards to its length, ship length: 3', () => {
       let gameboard = new Gameboard();
       gameboard.placeShip([0,3], new Ship(3));
       expect(gameboard.board[0][3]).toBeInstanceOf(Ship);

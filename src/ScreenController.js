@@ -5,8 +5,10 @@ import { Player } from './player.js';
 export { ScreenController }
 
 class ScreenController{
-    constructor(player1= new Player(), player2= new Player('Computer')){
-      this.gc = new GameController(player1,player2);
+    constructor(){
+      // this.gc = new GameController(player1= new Player(), player2= new Player('Computer'));
+      // this.gc = new GameController(player1,player2);
+      this.gc;
 
       // Storing an arrow function into variables
       // Stored event handler for click event of buildOpposingBoard
@@ -40,6 +42,52 @@ class ScreenController{
       // Stored event handler
       this.modeEventListener = (e) =>{
         console.log(e.target.id);
+        if(e.target.id === 'player-button'){
+          this.vsPlayerMode();
+        } else {
+          this.vsComputerMode();
+        }
+      }
+
+
+      this.placeShipListener = (e, player) => {
+        // console.log(e.target.previousSibling.value);
+        // console.log(e.target.parentNode.firstChild.dataset.shiplength);
+        console.log(e.target);
+        console.log(player);
+
+        let parent = e.target.parentNode;
+        let y = parseInt(e.target.previousSibling.value);
+        let x = parseInt(e.target.previousSibling.previousSibling.value);
+        let shipLength = parseInt(e.target.parentNode.firstChild.dataset.shiplength);
+        let button = e.target;
+        let message = e.target.nextSibling;
+    
+        let gameboard = player.playerBoard;
+        // console.log(typeof y);
+        // console.log(typeof x);
+        // console.log(typeof shipLength);
+        
+        if(gameboard.placeShip([x,y], new Ship(shipLength))){
+          console.log('Successful place');
+          message.textContent = 'Succesful place';
+          parent.removeChild(button);
+        } else {
+          console.log(`Can't place there`);
+          message.textContent = `Can't place ship there. Try again`;
+        }
+        
+      };
+
+      this.continueOpposingPlayerListener = (e) => {
+        console.log('Continuining to place ship of other player');
+        this.renderPlaceShip(this.gc.getOpposingPlayer());
+      };
+
+      this.continueGameListener = (e) => {
+        this.clearHelper()
+        this.buildActivePlayerBoard();
+        this.buildOpposingBoard();
       }
       
       // this.defaultSetup();
@@ -48,6 +96,79 @@ class ScreenController{
 
       this.showModeSelector();
 
+    }
+
+    vsPlayerMode(){
+      console.log('Two players mode');
+      this.clearHelper();
+      let nameInput = prompt('Please enter a name for player 1', 'Player 1');
+      let nameInput2 = prompt('Please enter a name for player 2', 'Player 2');
+      let tmpgc = new GameController(nameInput,nameInput2);
+      this.gc = tmpgc;
+      this.renderPlaceShip(this.gc.getActivePlayer());
+    }
+
+    vsComputerMode(){
+
+    }
+
+    renderPlaceShip(player){
+      let mainDiv = document.getElementById('main');
+      mainDiv.textContent = `${player.name}'s Ships`;
+      let arrShips = [ new Ship(5), new Ship(4), new Ship(3), new Ship(3), new Ship(2)];
+      let continueButton = document.createElement('button');
+
+      arrShips.forEach((elem, ind) => {
+        let shipDiv = document.createElement('div');
+        let para = document.createElement('p');
+        let inputY = document.createElement('input');
+        let inputX = document.createElement('input');
+        let button = document.createElement('button');
+        let errorMessageSpan = document.createElement('span');
+        
+        
+        shipDiv.classList.add('ship');
+        para.textContent = `Ship ${ind + 1}, with the length of ${elem.length}`;
+        para.setAttribute('data-shiplength', `${elem.length}`);
+        inputY.setAttribute('name','y');
+        inputY.setAttribute('type', 'number');
+        inputY.setAttribute('value', '0');
+        inputY.setAttribute('min', '0');
+        inputY.setAttribute('max', '9');
+
+        inputX.setAttribute('name','x');
+        inputX.setAttribute('type', 'number');
+        inputX.setAttribute('value', '0');
+        inputX.setAttribute('min', '0');
+        inputX.setAttribute('max', '9');
+        
+        button.id = 'place-ship';
+        button.textContent = 'Place Ship';
+        // button.addEventListener('click', this.placeShipListener(e,player));
+        button.addEventListener('click', (e) => {
+          this.placeShipListener(e, player);
+        });
+
+  
+        shipDiv.appendChild(para);
+        shipDiv.appendChild(inputY);
+        shipDiv.appendChild(inputX);
+        shipDiv.appendChild(button);
+        shipDiv.appendChild(errorMessageSpan);
+        mainDiv.appendChild(shipDiv);
+        
+      });
+
+      continueButton.id = 'continue-button';
+      if(player.name === this.gc.getActivePlayerName()){
+        continueButton.textContent = 'Continue to place ship of the other player'
+        continueButton.addEventListener('click', this.continueOpposingPlayerListener);
+      } else {
+        continueButton.textContent = 'Continue with game';
+        continueButton.addEventListener('click', this.continueGameListener);
+      }
+
+      mainDiv.appendChild(continueButton);
     }
 
     showModeSelector(){
@@ -263,11 +384,13 @@ class ScreenController{
       let opposingPlayerAreaDiv = document.getElementById('opposingPlayerArea');
       let messageEventDiv = document.getElementById('messageEvent');
       let messageLogs = document.getElementById('messageLogs');
+      let mainDiv = document.getElementById('main');
 
       activePlayerAreaDiv.innerHTML = '';
       opposingPlayerAreaDiv.innerHTML = '';
       messageEventDiv.innerHTML = '';
       messageLogs.innerHTML = '';
+      mainDiv.innerHTML = '';
     }
 
 
