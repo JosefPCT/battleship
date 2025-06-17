@@ -10,6 +10,15 @@ class ScreenController{
       // this.gc = new GameController(player1,player2);
       this.gc;
 
+      // Stored variable for an event handler that checks if a user pick Vs Another Player Button or Vs Computer Button, calls on the appropriate method
+      this.modeEventListener = (e) =>{
+        console.log(e.target.id);
+        if(e.target.id === 'player-button'){
+          this.vsPlayerMode();
+        } else {
+          this.vsComputerMode();
+        }
+      }      
       // Storing an arrow function into variables
       // Stored event handler for click event of buildOpposingBoard
       this.mouseenterListener = (e) => {
@@ -39,17 +48,8 @@ class ScreenController{
         };
       }
 
-      // Stored event handler
-      this.modeEventListener = (e) =>{
-        console.log(e.target.id);
-        if(e.target.id === 'player-button'){
-          this.vsPlayerMode();
-        } else {
-          this.vsComputerMode();
-        }
-      }
 
-
+      // Stored event handler arrow function
       this.placeShipListener = (e, player) => {
         // console.log(e.target.previousSibling.value);
         // console.log(e.target.parentNode.firstChild.dataset.shiplength);
@@ -79,17 +79,20 @@ class ScreenController{
         
       };
 
+      // Event handler for placing ships of a player opponent
       this.continueOpposingPlayerListener = (e) => {
         console.log('Continuining to place ship of other player');
         this.renderPlaceShip(this.gc.getOpposingPlayer());
       };
 
+      // Event handler for when finish placing ships of both players
       this.continueGameListener = (e) => {
         this.clearHelper()
         this.buildActivePlayerBoard();
         this.buildOpposingBoard();
       }
 
+      // Event handler for placing ships and also building both boards if the opponent is a computer
       this.continueComputerOpposingListener = () => {
         console.log("Continuing... Opposing a computer");
         this.clearHelper();
@@ -106,6 +109,30 @@ class ScreenController{
 
     }
 
+    // Shows a screen where a user may pick between versing another player or versing a computer
+    showModeSelector(){
+      this.clearHelper();
+      let mainDiv = document.getElementById('main');
+      // mainDiv.innerHTML = `
+      // <button> Vs Another Player</button>
+      // <button> Vs Computer </button>`;
+      let modeComputerButton = document.createElement('button');
+      let modePlayerButton = document.createElement('button')
+
+      modeComputerButton.setAttribute('id','computer-button');
+      modePlayerButton.setAttribute('id','player-button');
+
+      modeComputerButton.textContent = 'Vs Computer';
+      modePlayerButton.textContent = 'Vs Another Player';
+
+      modeComputerButton.addEventListener('click', this.modeEventListener);
+      modePlayerButton.addEventListener('click', this.modeEventListener);
+
+      mainDiv.appendChild(modePlayerButton);
+      mainDiv.appendChild(modeComputerButton);
+    }    
+
+    // Method to call on if user picks the mode of two players
     vsPlayerMode(){
       console.log('Two players mode');
       this.clearHelper();
@@ -116,6 +143,7 @@ class ScreenController{
       this.renderPlaceShip(this.gc.getActivePlayer());
     }
 
+    // Method to call on if user picks the mode of versing a computer
     vsComputerMode(){
       console.log("Versing a computer");
       this.clearHelper();
@@ -124,12 +152,14 @@ class ScreenController{
       this.renderPlaceShip(this.gc.getActivePlayer());
     }
 
+    // Displays all the ships and have the user place the ship via input
     renderPlaceShip(player){
       let mainDiv = document.getElementById('main');
       mainDiv.textContent = `${player.name}'s Ships`;
       let arrShips = [ new Ship(5), new Ship(4), new Ship(3), new Ship(3), new Ship(2)];
       let continueButton = document.createElement('button');
 
+      // Iterate through the array of ships, can even remove the array of ships and just use 5 random items
       arrShips.forEach((elem, ind) => {
         let shipDiv = document.createElement('div');
         let para = document.createElement('p');
@@ -171,6 +201,7 @@ class ScreenController{
         
       });
 
+      // Adds a continue button that depends if an opposing player is a computer, another player or if both players are done placing ships
       continueButton.id = 'continue-button';
       if(this.gc.getOpposingPlayerName() === 'Computer'){
         continueButton.textContent = 'Continue to play with a computer';
@@ -186,28 +217,6 @@ class ScreenController{
       }
 
       mainDiv.appendChild(continueButton);
-    }
-
-    showModeSelector(){
-      this.clearHelper();
-      let mainDiv = document.getElementById('main');
-      // mainDiv.innerHTML = `
-      // <button> Vs Another Player</button>
-      // <button> Vs Computer </button>`;
-      let modeComputerButton = document.createElement('button');
-      let modePlayerButton = document.createElement('button')
-
-      modeComputerButton.setAttribute('id','computer-button');
-      modePlayerButton.setAttribute('id','player-button');
-
-      modeComputerButton.textContent = 'Vs Computer';
-      modePlayerButton.textContent = 'Vs Another Player';
-
-      modeComputerButton.addEventListener('click', this.modeEventListener);
-      modePlayerButton.addEventListener('click', this.modeEventListener);
-
-      mainDiv.appendChild(modePlayerButton);
-      mainDiv.appendChild(modeComputerButton);
     }
 
 
@@ -236,6 +245,7 @@ class ScreenController{
     }
 
     //Helper method for the event handler if a hit does not result to victory, to display a screen that indicates the switching of turns, clears the board, and rebuilds the new activePlayer board and opposingplayer board
+    //Also has logic if the opposing player is a computer
     switchTurnRender(){
       this.removingListeners();
       let activePlayerAreaDiv = document.getElementById('activePlayerArea');
@@ -279,18 +289,18 @@ class ScreenController{
       messageEventDiv.textContent = `${this.gc.activePlayer.name} is the Winner!`;
     }
 
-    // Method to help setup the board without having the player manually placeShips
-    defaultSetup(){
-      let activePlayerBoard = this.gc.activePlayer.playerBoard;
-      activePlayerBoard.placeShip([0,0], new Ship(3));
-      activePlayerBoard.placeShip([5,5], new Ship(1));
-      activePlayerBoard.placeShip([3,3], new Ship(5));
-      activePlayerBoard.getCell([3,3]).hit().hit().hit().hit().hit();
+    // // Method to help setup the board without having the player manually placeShips
+    // defaultSetup(){
+    //   let activePlayerBoard = this.gc.activePlayer.playerBoard;
+    //   activePlayerBoard.placeShip([0,0], new Ship(3));
+    //   activePlayerBoard.placeShip([5,5], new Ship(1));
+    //   activePlayerBoard.placeShip([3,3], new Ship(5));
+    //   activePlayerBoard.getCell([3,3]).hit().hit().hit().hit().hit();
       
 
-      let opposingPlayerBoard = this.gc.opposingPlayer.playerBoard;
-      opposingPlayerBoard.placeShip([1,1], new Ship(1));
-    }
+    //   let opposingPlayerBoard = this.gc.opposingPlayer.playerBoard;
+    //   opposingPlayerBoard.placeShip([1,1], new Ship(1));
+    // }
 
     // Method to setup computer board
     defaultComputerSetup(){
