@@ -22,6 +22,7 @@ class Gameboard{
     }
 
     placeShip(coordinates, ship){
+      console.log("Placing ship on the board of gameboard class");
       let [y, x] = coordinates;
       let len = this.board.length;
       // Check if valid coordinates

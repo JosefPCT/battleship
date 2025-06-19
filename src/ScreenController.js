@@ -82,7 +82,10 @@ class ScreenController{
       // Event handler for placing ships of a player opponent
       this.continueOpposingPlayerListener = (e) => {
         console.log('Continuining to place ship of other player');
-        this.renderPlaceShip(this.gc.getOpposingPlayer());
+        // this.renderPlaceShip(this.gc.getOpposingPlayer());
+        let mainDiv = document.getElementById("main");
+        mainDiv.innerHTML = '';
+        this.renderDragPlaceShip(this.gc.getOpposingPlayer());
       };
 
       // Event handler for when finish placing ships of both players
@@ -140,7 +143,7 @@ class ScreenController{
       let nameInput2 = prompt('Please enter a name for player 2', 'Player 2');
       let tmpgc = new GameController(nameInput,nameInput2);
       this.gc = tmpgc;
-      this.renderPlaceShip(this.gc.getActivePlayer());
+      this.renderDragPlaceShip(this.gc.getActivePlayer());
     }
 
     // Method to call on if user picks the mode of versing a computer
@@ -149,15 +152,16 @@ class ScreenController{
       this.clearHelper();
       let name = prompt('Please enter your name');
       this.gc = new GameController(name, 'Computer');
-      this.renderPlaceShip(this.gc.getActivePlayer());
+      this.renderDragPlaceShip(this.gc.getActivePlayer());
     }
 
     // Displays all the ships and have the user place the ship via input
+    // Old version of rendering ships use renderDragPlaceShips
     renderPlaceShip(player){
       let mainDiv = document.getElementById('main');
       mainDiv.textContent = `${player.name}'s Ships`;
       let arrShips = [ new Ship(5), new Ship(4), new Ship(3), new Ship(3), new Ship(2)];
-      let continueButton = document.createElement('button');
+      
 
       // Iterate through the array of ships, can even remove the array of ships and just use 5 random items
       arrShips.forEach((elem, ind) => {
@@ -200,25 +204,135 @@ class ScreenController{
         mainDiv.appendChild(shipDiv);
         
       });
-
-      // Adds a continue button that depends if an opposing player is a computer, another player or if both players are done placing ships
-      continueButton.id = 'continue-button';
-      if(this.gc.getOpposingPlayerName() === 'Computer'){
-        continueButton.textContent = 'Continue to play with a computer';
-        continueButton.addEventListener('click', this.continueComputerOpposingListener);
-      }
-      else if(player.name === this.gc.getActivePlayerName()){
-        continueButton.textContent = 'Continue to place ship of the other player'
-        continueButton.addEventListener('click', this.continueOpposingPlayerListener);
-      } 
-      else {
-        continueButton.textContent = 'Continue with game';
-        continueButton.addEventListener('click', this.continueGameListener);
-      }
-
-      mainDiv.appendChild(continueButton);
+  
+      this.renderContinueButton(mainDiv, player);
     }
 
+    // Alternative way of placing ships via drag and drop
+    renderDragPlaceShip(player){
+      console.log("Entering drag place ship method");
+      let mainDiv = document.getElementById('main');
+
+      let placeShipAreaDiv = document.createElement('div');
+      placeShipAreaDiv.id = 'placeShipArea';
+      placeShipAreaDiv.classList.add('divFlex');
+
+      let shipsDiv = document.createElement('div');
+      shipsDiv.id = 'ships';
+
+      let boardDiv = document.createElement('div');
+      boardDiv.id = 'placeShipBoard';
+
+      this.renderDraggableShips(player, shipsDiv);
+      this.renderBoard(player, boardDiv);
+      
+      placeShipAreaDiv.appendChild(shipsDiv);
+      placeShipAreaDiv.appendChild(boardDiv);
+      mainDiv.appendChild(placeShipAreaDiv);
+      this.renderContinueButton(mainDiv,player);
+    };
+
+    // Method will render ship-like objects to drag into the board
+    renderDraggableShips(player, node){
+      let arrShipLengths = [5,4,3,3,2];
+      arrShipLengths.forEach((length, ind) => {
+        let shipDiv = document.createElement('div');
+        shipDiv.setAttribute('id',`placeableShip-${ind}`);
+        shipDiv.classList.add('shipContainer');
+        shipDiv.setAttribute('draggable', true);
+        shipDiv.setAttribute('data-shipLength', `${length}`);
+        
+
+        shipDiv.addEventListener('dragstart', (ev) => {
+          ev.dataTransfer.setData('shipData', ev.target.id);
+          ev.dataTransfer.effectAllowed = 'move';
+        });
+
+        for(let i = 0; i < length; i++){
+          let shipGrid = document.createElement('div');
+          shipGrid.classList.add('ship');
+          
+          shipDiv.appendChild(shipGrid)
+        }
+        node.appendChild(shipDiv);
+      });
+    }
+
+    // Will create a board and append to the passed node
+    renderBoard(player, node){
+      let board = player.playerBoard.board;
+      let row = board.length;
+      let column = board[0].length;
+
+      for(let i = 0; i < row; i++){
+        let rowDiv = document.createElement('div');
+        rowDiv.classList.add('row');
+        for(let j = 0; j < column; j++){
+          let columnDiv = document.createElement('div');
+          columnDiv.classList.add('column');
+          columnDiv.setAttribute('data-row',`${i}`);
+          columnDiv.setAttribute('data-col',`${j}`);
+          // columnDiv.id = `${i}${j}`;
+
+          // Adding event listeners
+          columnDiv.addEventListener('dragover', (ev) => {
+            ev.preventDefault();
+            console.log('Drag over listener...');
+            ev.dataTransfer.dropEffect = 'move';
+          });
+
+          columnDiv.addEventListener('drop', (ev) => {
+            ev.preventDefault();
+            console.log('Drop listener...');
+            console.log(ev.target);
+
+            let shipId = ev.dataTransfer.getData('shipData');
+            let ship = document.getElementById(shipId);
+            let shipParent = ship.parentNode;
+
+            let shipLength = ship.dataset.shiplength;
+            let row = parseInt(ev.target.dataset.row);
+            let column = parseInt(ev.target.dataset.col);
+            let num = 0;
+
+            player.playerBoard.placeShip([row,column], new Ship(shipLength));
+            
+            while(num < shipLength){
+              let node = document.querySelector(`[data-row='${row}'][data-col='${column}']`);
+              node.classList.add('successfulPlace');
+              row++;
+              num++;
+            }
+
+            shipParent.removeChild(ship);
+          
+          });
+          
+          rowDiv.appendChild(columnDiv);
+        }
+        node.appendChild(rowDiv);
+      }
+    }
+
+    // Adds a continue button that depends if an opposing player is a computer, another player or if both players are done placing ships
+    renderContinueButton(node, player){
+    let continueButton = document.createElement('button');
+    continueButton.id = 'continue-button';
+    if(this.gc.getOpposingPlayerName() === 'Computer'){
+      continueButton.textContent = 'Continue to play with a computer';
+      continueButton.addEventListener('click', this.continueComputerOpposingListener);
+    }
+    else if(player.name === this.gc.getActivePlayerName()){
+      continueButton.textContent = 'Continue to place ship of the other player'
+      continueButton.addEventListener('click', this.continueOpposingPlayerListener);
+    } 
+    else {
+      continueButton.textContent = 'Continue with game';
+      continueButton.addEventListener('click', this.continueGameListener);
+    }
+    node.appendChild(continueButton);
+  }
+  
 
     // Helper method to remove listeners once an opposing grid has been clicked
     removingListeners(){
@@ -233,7 +347,8 @@ class ScreenController{
 
     //Helper method for the event handler of click events to call on the receiveAttack method of the opposing opponent's gameboard, also adds a message on the screen regarding the information on the clicked grid
     sendAttackEvent(coordinates){
-
+      console.log("Send attack event method entering...");
+      console.log(coordinates);
       let message = this.gc.hitOpponent(coordinates);
       let log = this.gc.generateActionLog(message, coordinates);
       this.gc.addLogToActivePlayer(log);
