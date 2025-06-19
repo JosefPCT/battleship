@@ -295,16 +295,21 @@ class ScreenController{
             let column = parseInt(ev.target.dataset.col);
             let num = 0;
 
-            player.playerBoard.placeShip([row,column], new Ship(shipLength));
-            
-            while(num < shipLength){
-              let node = document.querySelector(`[data-row='${row}'][data-col='${column}']`);
-              node.classList.add('successfulPlace');
-              row++;
-              num++;
+            if(player.playerBoard.placeShip([row,column], new Ship(shipLength))){
+              while(num < shipLength){
+                let node = document.querySelector(`[data-row='${row}'][data-col='${column}']`);
+                node.classList.add('successfulPlace');
+                row++;
+                num++;
+              }
+              shipParent.removeChild(ship);
+            } else {
+              console.log('Try again');
             }
+            
 
-            shipParent.removeChild(ship);
+
+            
           
           });
           
